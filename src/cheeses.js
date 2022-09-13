@@ -8,12 +8,11 @@ client;
 
 module.exports.handler = async (event, context) => {
   try {
-    const createP = await client.query(q.Create(q.Collection('cheeses'), { data: { title: 'Camembert' } }));
-    console.log(createP);
+    const cheeseList = await client.query(q.Paginate(q.Match(q.Index('cheeses'))));
+
+    return { statusCode: 200, body: JSON.stringify(cheeseList) };
   } catch (error) {
     console.log(error);
+    return { statusCode: 500, body: JSON.stringify(error) };
   }
-  return {
-    statusCode: 200,
-  };
 };
